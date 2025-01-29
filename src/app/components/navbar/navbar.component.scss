@@ -1,0 +1,121 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+
+  img {
+    height: 80px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+
+    a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #e84c3d;
+        transition: width 0.3s ease;
+        border-radius: 1px;
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+
+      &.active {
+        color: #e84c3d;
+        
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+
+    .cart-btn {
+      background: none;
+      border: none;
+      color: #f5f5f5;
+      font-size: 1.2rem;
+      cursor: pointer;
+      position: relative;
+      padding: 0.5rem;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #e84c3d;
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #e84c3d;
+        color: #fff;
+        font-size: 0.8rem;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+    padding: 1rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    img {
+      height: 60px;
+    }
+
+    .nav-links {
+      gap: 1.5rem;
+      
+      a {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    .nav-links {
+      width: 100%;
+      justify-content: space-between;
+      
+      a {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}

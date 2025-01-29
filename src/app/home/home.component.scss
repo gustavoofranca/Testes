@@ -1,0 +1,162 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 0;
+
+  img {
+    height: 60px;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+
+    a {
+      color: #f5f5f5;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+
+      &:hover {
+        color: #e84c3d;
+      }
+    }
+  }
+}
+
+.hero {
+  position: relative;
+  height: 85vh;
+  overflow: hidden;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnlseWRxYmN1cWI0NTJuanQwZ2J2YmdmbHltMTltOHZqNHc5MWYwMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IzNq7U7mX0ecLvNKh0/giphy.gif');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 1rem;
+
+  h1 {
+    font-size: 4.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #e84c3d;
+    text-shadow: 0 4px 12px rgba(232, 76, 61, 0.3);
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    color: #f5f5f5;
+    font-weight: 500;
+  }
+
+  .btn {
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .footer-link {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #e84c3d;
+    }
+  }
+
+  .opening-hours {
+    color: #e84c3d;
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 768px) {
+  nav {
+    padding: 1rem 0;
+
+    img {
+      height: 50px;
+    }
+
+    .nav-links {
+      gap: 1.5rem;
+
+      a {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  .hero-content {
+    h1 {
+      font-size: 3rem;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .btn {
+      font-size: 1rem;
+      padding: 0.8rem 2rem;
+    }
+  }
+
+  .footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content {
+    h1 {
+      font-size: 2.2rem;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+    }
+  }
+}

@@ -1,0 +1,99 @@
+<div class="container">
+  <app-navbar variant="home"></app-navbar>
+
+  <div class="dashboard-header">
+    <h1>Painel Financeiro</h1>
+    <div class="date-filter">
+      <button class="filter-btn active">Hoje</button>
+      <button class="filter-btn">7 dias</button>
+      <button class="filter-btn">30 dias</button>
+      <button class="filter-btn">Este ano</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Valor total vendas</h3>
+      <p>R$ {{stats.totalSales.toFixed(2)}}</p>
+      <span class="trend positive">+15% vs último período</span>
+    </div>
+    <div class="stat-card">
+      <h3>Custo total</h3>
+      <p>R$ {{stats.totalCost.toFixed(2)}}</p>
+      <span class="trend negative">+8% vs último período</span>
+    </div>
+    <div class="stat-card">
+      <h3>Lucro líquido total</h3>
+      <p>R$ {{stats.netProfit.toFixed(2)}}</p>
+      <span class="trend positive">+22% vs último período</span>
+    </div>
+    <div class="stat-card">
+      <h3>Total de pedidos</h3>
+      <p>{{stats.totalOrders}} pedidos</p>
+      <span class="trend positive">+12% vs último período</span>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Receita ao longo do tempo</h3>
+      <canvas id="revenueChart"></canvas>
+    </div>
+    
+    <div class="chart-card">
+      <h3>Distribuição de Custos</h3>
+      <canvas id="costDistributionChart"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>Métodos de Pagamento</h3>
+      <canvas id="paymentMethodsChart"></canvas>
+    </div>
+  </div>
+
+  <div class="details-grid">
+    <div class="product-performance-card">
+      <h3>Desempenho dos Produtos</h3>
+      <div class="product-list">
+        <div class="product-item" *ngFor="let product of topProducts">
+          <div class="product-info">
+            <h4>{{product.productName}}</h4>
+            <div class="metrics">
+              <span>Vendas: {{product.totalQuantity}}</span>
+              <span>Preço Médio: R$ {{product.averagePrice.toFixed(2)}}</span>
+              <span>Margem: {{product.profitMargin.toFixed(1)}}%</span>
+            </div>
+          </div>
+          <div class="popularity-bar">
+            <div class="bar" [style.width.%]="product.popularity"></div>
+            <span>{{product.popularity.toFixed(1)}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="orders-card">
+      <h3>Pedidos Recentes</h3>
+      <div class="order-item" *ngFor="let order of ordersList">
+        <span>{{order.name}}</span>
+        <span>{{order.count}}</span>
+      </div>
+    </div>
+
+    <div class="completion-card">
+      <h3>Taxa de Conclusão</h3>
+      <div class="completion-rates">
+        <div class="rate-item" *ngFor="let rate of completionRates">
+          <div class="circle-progress">
+            <svg viewBox="0 0 36 36">
+              <circle r="16" cx="18" cy="18" fill="none" stroke="#e6e6e6" stroke-width="2"></circle>
+              <circle r="16" cx="18" cy="18" fill="none" stroke="#00ff00" stroke-width="2" [attr.stroke-dasharray]="rate.percentage + ' 100'"></circle>
+            </svg>
+            <span>{{rate.percentage}}%</span>
+          </div>
+          <p>{{rate.name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,8 +18,6 @@ export interface MenuItem {
 
 @Component({
   selector: 'app-menu',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, NavbarComponent, CartComponent],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })

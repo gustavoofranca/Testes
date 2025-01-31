@@ -8,13 +8,9 @@
 
     <div class="nav-links">
       <a routerLink="/menu" routerLinkActive="active">Cardápio</a>
-      <a routerLink="/about" routerLinkActive="active">Saiba Mais</a>
-      
-      <!-- Links Admin -->
+      <a routerLink="/saiba-mais" routerLinkActive="active">Saiba Mais</a>
       <ng-container *ngIf="isAdmin$ | async">
-        <a routerLink="/orders" routerLinkActive="active">Pedidos</a>
-        <a routerLink="/inventory" routerLinkActive="active">Estoque</a>
-        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/admin" routerLinkActive="active">Painel Admin</a>
       </ng-container>
     </div>
 
@@ -26,17 +22,11 @@
         </span>
       </button>
       
-      <ng-container *ngIf="isAdmin$ | async; else loginButton">
+      <ng-container *ngIf="isAdmin$ | async">
         <button class="logout-button" (click)="logout()">
           <i class="fas fa-sign-out-alt"></i>
         </button>
       </ng-container>
-      
-      <ng-template #loginButton>
-        <a routerLink="/login" class="login-button">
-          <i class="fas fa-user"></i>
-        </a>
-      </ng-template>
     </div>
   </div>
 </nav>

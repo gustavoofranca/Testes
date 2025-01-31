@@ -1,11 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { NavbarComponent } from '../components/navbar/navbar.component';
 import { OrderService, Order } from '../services/order.service';
 import { Chart } from 'chart.js/auto';
 import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 
 interface DashboardStats {
   totalSales: number;
@@ -18,85 +14,7 @@ interface DashboardStats {
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FormsModule],
-  template: `
-    <div class="dashboard-container">
-      <app-navbar></app-navbar>
-      
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Vendas Totais</h3>
-          <p>R$ {{ stats.totalSales.toFixed(2) }}</p>
-        </div>
-        <div class="stat-card">
-          <h3>Total de Pedidos</h3>
-          <p>{{ stats.totalOrders }}</p>
-        </div>
-        <div class="stat-card">
-          <h3>Ticket Médio</h3>
-          <p>R$ {{ stats.averageTicket.toFixed(2) }}</p>
-        </div>
-        <div class="stat-card">
-          <h3>Lucro</h3>
-          <p>R$ {{ stats.profit.toFixed(2) }}</p>
-        </div>
-      </div>
-
-      <div class="charts-grid">
-        <div class="chart-container">
-          <h3>Vendas por Período</h3>
-          <canvas #salesChart></canvas>
-        </div>
-        <div class="chart-container">
-          <h3>Produtos Mais Vendidos</h3>
-          <canvas #productsChart></canvas>
-        </div>
-      </div>
-
-      <div class="orders-section">
-        <div class="section-header">
-          <h3>Pedidos Recentes</h3>
-          <div class="actions">
-            <select [(ngModel)]="dateFilter" (change)="updateData()">
-              <option value="today">Hoje</option>
-              <option value="week">Última Semana</option>
-              <option value="month">Último Mês</option>
-              <option value="year">Último Ano</option>
-            </select>
-            <button class="export-btn" (click)="exportToSheets()">
-              Exportar para Planilha
-            </button>
-          </div>
-        </div>
-        
-        <table class="orders-table">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Cliente</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Pagamento</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let order of recentOrders">
-              <td>{{ order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm' }}</td>
-              <td>{{ order.customerName }}</td>
-              <td>R$ {{ order.total.toFixed(2) }}</td>
-              <td>
-                <span [class]="'status-' + order.status">
-                  {{ order.status }}
-                </span>
-              </td>
-              <td>{{ order.paymentMethod }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  `,
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {

@@ -5,8 +5,6 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-saiba-mais',
-  standalone: true,
-  imports: [CommonModule, NavbarComponent, RouterModule],
   templateUrl: './saiba-mais.component.html',
   styleUrls: ['./saiba-mais.component.scss']
 })

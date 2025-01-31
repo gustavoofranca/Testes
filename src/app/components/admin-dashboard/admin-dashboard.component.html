@@ -1,0 +1,24 @@
+<div class="admin-dashboard">
+  <h2>Painel Administrativo</h2>
+  
+  <div class="admin-menu">
+    <a routerLink="orders" routerLinkActive="active" class="admin-link">
+      <i class="fas fa-clipboard-list"></i>
+      <span>Pedidos</span>
+    </a>
+    
+    <a routerLink="inventory" routerLinkActive="active" class="admin-link">
+      <i class="fas fa-box"></i>
+      <span>Estoque</span>
+    </a>
+    
+    <a routerLink="dashboard" routerLinkActive="active" class="admin-link">
+      <i class="fas fa-chart-line"></i>
+      <span>Financeiro</span>
+    </a>
+  </div>
+
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

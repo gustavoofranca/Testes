@@ -40,7 +40,7 @@ export class MenuComponent {
       price: 31.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela, alface, tomate e molho especial. Acompanha batata frita e Refri lata.',
       category: 'combo',
-      imageUrl: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=500'
+      imageUrl: 'https://as2.ftcdn.net/jpg/00/92/04/47/1000_F_92044757_K6rFzZN9mBNu7w8aJFNwEAhzkV0tefUo.jpg'
     },
     {
       id: '3',
@@ -129,14 +129,6 @@ export class MenuComponent {
       description: 'Lata 350ml',
       category: 'drink',
       imageUrl: 'https://i.ibb.co/xqbcNMH9/image-3.png'
-    },
-    {
-      id: '14',
-      name: 'Salad Burger Combo',
-      price: 32.90,
-      description: 'Hambúrguer com alface, tomate, queijo e molho especial + Fritas + Refrigerante',
-      category: 'combo',
-      imageUrl: 'https://as2.ftcdn.net/jpg/00/92/04/47/1000_F_92044757_K6rFzZN9mBNu7w8aJFNwEAhzkV0tefUo.jpg'
     }
   ];
 

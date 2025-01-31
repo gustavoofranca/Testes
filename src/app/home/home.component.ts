@@ -7,6 +7,6 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
   standalone: true,
   imports: [RouterLink, NavbarComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {}

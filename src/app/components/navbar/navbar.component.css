@@ -42,12 +42,8 @@
   color: #e65100;
 }
 
-.nav-link.active {
-  color: #e65100;
-}
-
 @media (max-width: 768px) {
-  .nav-links {
+  .navbar-content {
     display: none;
   }
 }

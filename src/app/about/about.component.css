@@ -1,23 +1,20 @@
-.about-content {
+.about-section {
   padding: 4rem 0;
-  background-color: #1a1a1a;
-  min-height: calc(100vh - 100px);
+  background: #1a1a1a;
+  color: #fff;
 }
 
-.about-section {
-  background: #222;
-  padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 h1 {
+  font-size: 2.8rem;
   color: #e65100;
-  font-size: 3rem;
-  margin-bottom: 2.5rem;
   text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  margin-bottom: 3rem;
   position: relative;
 }
 
@@ -31,54 +28,122 @@ h1::after {
   border-radius: 2px;
 }
 
-.story-content {
+.about-content {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  align-items: start;
+  align-items: center;
+  margin-bottom: 4rem;
 }
 
-.story-content img {
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.text-content {
-  color: #f5f5f5;
-}
-
-.text-content p {
-  margin-bottom: 1.5rem;
-  line-height: 1.8;
+.about-text {
   font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.highlight {
+  font-size: 1.3rem;
+  color: #e65100;
+  font-weight: 500;
+  margin-bottom: 2rem;
 }
 
 blockquote {
-  margin: 2rem 0;
-  padding: 1.5rem;
   border-left: 4px solid #e65100;
-  background: rgba(230, 81, 0, 0.1);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
   font-style: italic;
+  color: #b3b3b3;
 }
 
 cite {
   display: block;
   margin-top: 1rem;
   color: #e65100;
-  font-weight: bold;
+  font-size: 0.9rem;
+  font-style: normal;
+}
+
+.about-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.values {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+}
+
+.values h2 {
+  font-size: 2rem;
+  color: #e65100;
+  margin-bottom: 2rem;
+}
+
+.values ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.values li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: #222;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.values li:hover {
+  transform: translateY(-5px);
+}
+
+.values i {
+  font-size: 2rem;
+  color: #e65100;
+}
+
+.values span {
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
-  .story-content {
-    grid-template-columns: 1fr;
-  }
-
   .about-section {
-    padding: 2rem;
+    padding: 2rem 0;
   }
 
   h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .about-text {
+    font-size: 1rem;
+  }
+
+  .highlight {
+    font-size: 1.2rem;
+  }
+
+  .values ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .values ul {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

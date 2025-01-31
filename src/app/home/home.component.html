@@ -8,12 +8,14 @@
     <div class="container hero-content">
       <h1>Bateu aquela fome?</h1>
       <h2>Faça seu pedido</h2>
-      <a [routerLink]="['/menu']" class="btn">Acessar cardápio</a>
+      <div class="button-container">
+        <a [routerLink]="['/menu']" class="btn btn-primary">Acessar cardápio</a>
+        <a [routerLink]="['/about']" class="btn btn-transparent">Saiba mais</a>
+      </div>
     </div>
   </div>
 
   <div class="container footer">
-    <a href="#" class="footer-link">Saiba mais</a>
     <p class="opening-hours">Abrimos hoje às 19:00</p>
     <div class="social-icons">
       <a href="#" aria-label="Instagram">

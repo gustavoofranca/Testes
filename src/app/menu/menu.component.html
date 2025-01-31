@@ -10,6 +10,34 @@
   </div>
 
   <main class="menu-content">
+    <section class="menu-section featured" *ngIf="filteredItems.combo.length">
+      <h2>Combos em Destaque</h2>
+      <div class="menu-grid">
+        <div class="menu-item" *ngFor="let combo of filteredItems.combo">
+          <img [src]="combo.imageUrl" [alt]="combo.name">
+          <div class="menu-item-content">
+            <h3>{{combo.name}}</h3>
+            <p class="description">{{combo.description}}</p>
+            <div class="item-footer">
+              <p class="price">R$ {{combo.price.toFixed(2)}}</p>
+              <button class="add-to-cart" (click)="addToCart(combo)">
+                <i class="fas fa-shopping-cart"></i>
+                Adicionar
+              </button>
+            </div>
+            <div class="rating">
+              <div class="stars">
+                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"
+                   [class.active]="star <= (combo.rating || 0)"
+                   (click)="rateItem(combo, star)"></i>
+              </div>
+              <span *ngIf="combo.rating">({{combo.rating}})</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="menu-section" *ngIf="filteredItems.burger.length">
       <h2>Hambúrgueres</h2>
       <div class="menu-grid">
@@ -38,9 +66,9 @@
       </div>
     </section>
 
-    <section class="menu-section" *ngIf="filteredItems.side.length">
+    <section class="menu-section sides" *ngIf="filteredItems.side.length">
       <h2>Acompanhamentos</h2>
-      <div class="menu-grid">
+      <div class="menu-grid small-items">
         <div class="menu-item" *ngFor="let side of filteredItems.side">
           <img [src]="side.imageUrl" [alt]="side.name">
           <div class="menu-item-content">
@@ -52,14 +80,6 @@
                 <i class="fas fa-shopping-cart"></i>
                 Adicionar
               </button>
-            </div>
-            <div class="rating">
-              <div class="stars">
-                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"
-                   [class.active]="star <= (side.rating || 0)"
-                   (click)="rateItem(side, star)"></i>
-              </div>
-              <span *ngIf="side.rating">({{side.rating}})</span>
             </div>
           </div>
         </div>
@@ -80,42 +100,6 @@
                 <i class="fas fa-shopping-cart"></i>
                 Adicionar
               </button>
-            </div>
-            <div class="rating">
-              <div class="stars">
-                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"
-                   [class.active]="star <= (drink.rating || 0)"
-                   (click)="rateItem(drink, star)"></i>
-              </div>
-              <span *ngIf="drink.rating">({{drink.rating}})</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="menu-section" *ngIf="filteredItems.sauce.length">
-      <h2>Molhos</h2>
-      <div class="menu-grid">
-        <div class="menu-item" *ngFor="let sauce of filteredItems.sauce">
-          <img [src]="sauce.imageUrl" [alt]="sauce.name">
-          <div class="menu-item-content">
-            <h3>{{sauce.name}}</h3>
-            <p class="description">{{sauce.description}}</p>
-            <div class="item-footer">
-              <p class="price">R$ {{sauce.price.toFixed(2)}}</p>
-              <button class="add-to-cart" (click)="addToCart(sauce)">
-                <i class="fas fa-shopping-cart"></i>
-                Adicionar
-              </button>
-            </div>
-            <div class="rating">
-              <div class="stars">
-                <i class="fas fa-star" *ngFor="let star of [1,2,3,4,5]"
-                   [class.active]="star <= (sauce.rating || 0)"
-                   (click)="rateItem(sauce, star)"></i>
-              </div>
-              <span *ngIf="sauce.rating">({{sauce.rating}})</span>
             </div>
           </div>
         </div>

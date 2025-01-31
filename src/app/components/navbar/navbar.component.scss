@@ -20,7 +20,7 @@ nav {
     align-items: center;
 
     a {
-      color: #f5f5f5;
+      color: white;
       text-decoration: none;
       font-weight: 500;
       transition: all 0.3s ease;
@@ -29,6 +29,10 @@ nav {
       font-size: 0.9rem;
       position: relative;
 
+      &:hover {
+        color: #e65100;
+      }
+
       &::after {
         content: '';
         position: absolute;
@@ -36,7 +40,7 @@ nav {
         left: 0;
         width: 0;
         height: 2px;
-        background: #e84c3d;
+        background: #e65100;
         transition: width 0.3s ease;
         border-radius: 1px;
       }
@@ -46,7 +50,7 @@ nav {
       }
 
       &.active {
-        color: #e84c3d;
+        color: #e65100;
         
         &::after {
           width: 100%;

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { initializeApp } from 'firebase/app';
 import { 
   getAuth, 
@@ -25,11 +26,16 @@ export interface UserRole {
   role: 'admin' | 'customer';
   email: string;
 }
+=======
+import { Auth, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { Observable, map } from 'rxjs';
+>>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+<<<<<<< HEAD
   private auth;
   private currentUser = new BehaviorSubject<User | null>(null);
   private userRoleSubject = new BehaviorSubject<UserRole | null>(null);
@@ -106,3 +112,36 @@ export class AuthService {
     return this.userRoleSubject.value?.role === 'customer';
   }
 }
+=======
+  user$ = user(this.auth);
+  
+  isAdmin$ = this.user$.pipe(
+    map(user => user?.email === 'admin@example.com')
+  );
+
+  constructor(private auth: Auth) {}
+
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
+
+  async login(email: string, password: string) {
+    try {
+      const result = await signInWithEmailAndPassword(this.auth, email, password);
+      return result;
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      throw error;
+    }
+  }
+
+  async logout() {
+    try {
+      await signOut(this.auth);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      throw error;
+    }
+  }
+}
+>>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb

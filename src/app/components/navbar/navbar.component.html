@@ -1,22 +1,42 @@
-<nav>
-  <a [routerLink]="['/']">
-    <img src="https://i.ibb.co/d46rJtk/Novo-Projeto.png" alt="Gusta's Logo">
-  </a>
-  <div class="nav-links">
-    <ng-container *ngIf="variant === 'home'">
-      <a [routerLink]="['/menu']">Cardápio</a>
-      <a [routerLink]="['/dashboard']">Financeiro</a>
-      <a [routerLink]="['/inventory']">Estoque</a>
-      <button class="cart-btn" (click)="openCart()">
+<nav [class.transparent]="variant === 'home'">
+  <div class="nav-content">
+    <div class="nav-brand">
+      <a routerLink="/">
+        <img src="assets/images/logo.png" alt="Logo">
+      </a>
+    </div>
+
+    <div class="nav-links">
+      <a routerLink="/menu" routerLinkActive="active">Cardápio</a>
+      <a routerLink="/about" routerLinkActive="active">Saiba Mais</a>
+      
+      <!-- Links Admin -->
+      <ng-container *ngIf="isAdmin$ | async">
+        <a routerLink="/orders" routerLinkActive="active">Pedidos</a>
+        <a routerLink="/inventory" routerLinkActive="active">Estoque</a>
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      </ng-container>
+    </div>
+
+    <div class="nav-actions">
+      <button class="cart-button" (click)="openCart()">
         <i class="fas fa-shopping-cart"></i>
-        <span class="cart-count" *ngIf="cartCount$ | async as count">{{count}}</span>
+        <span class="cart-count" *ngIf="cartItemCount$ | async as count">
+          {{count}}
+        </span>
       </button>
-    </ng-container>
-    <ng-container *ngIf="variant === 'about'">
-      <a [routerLink]="['/']">Home</a>
-      <a [routerLink]="['/menu']">Cardápio</a>
-    </ng-container>
+      
+      <ng-container *ngIf="isAdmin$ | async; else loginButton">
+        <button class="logout-button" (click)="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </ng-container>
+      
+      <ng-template #loginButton>
+        <a routerLink="/login" class="login-button">
+          <i class="fas fa-user"></i>
+        </a>
+      </ng-template>
+    </div>
   </div>
 </nav>
-
-<app-cart></app-cart>

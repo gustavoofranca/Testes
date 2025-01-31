@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { Firestore, collection, addDoc, query, getDocs, orderBy, where, Timestamp } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 
@@ -10,12 +11,24 @@ export interface Transaction {
   category: string;
   date: Timestamp;
   orderId?: string;
+=======
+import { BehaviorSubject } from 'rxjs';
+import { CartItem } from './cart.service';
+
+export interface Transaction {
+  id: string;
+  items: CartItem[];
+  total: number;
+  date: Date;
+  status: 'pending' | 'completed' | 'cancelled';
+>>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class FinancialService {
+<<<<<<< HEAD
   constructor(private firestore: Firestore) {}
 
   async addTransaction(transaction: Omit<Transaction, 'id'>) {
@@ -83,5 +96,40 @@ export class FinancialService {
       transaction.orderId || ''
     ]);
     return [headers, ...rows].map(row => row.join(',')).join('\n');
+=======
+  private transactions: Transaction[] = [];
+  private transactionsSubject = new BehaviorSubject<Transaction[]>([]);
+
+  transactions$ = this.transactionsSubject.asObservable();
+
+  createTransaction(items: CartItem[], total: number): Transaction {
+    const transaction: Transaction = {
+      id: Date.now().toString(),
+      items: [...items],
+      total,
+      date: new Date(),
+      status: 'pending'
+    };
+
+    this.transactions.push(transaction);
+    this.updateTransactions();
+    return transaction;
+  }
+
+  updateTransactionStatus(transactionId: string, status: 'pending' | 'completed' | 'cancelled') {
+    const transaction = this.transactions.find(t => t.id === transactionId);
+    if (transaction) {
+      transaction.status = status;
+      this.updateTransactions();
+    }
+  }
+
+  getTransactions() {
+    return [...this.transactions];
+  }
+
+  private updateTransactions() {
+    this.transactionsSubject.next([...this.transactions]);
+>>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
   }
 }

@@ -698,14 +698,13 @@ export class CartComponent {
   }
 
   finishOrder() {
+    const transaction = this.cartService.checkout();
     console.log('Pedido finalizado:', {
-      items: this.cartService.cart$,
-      delivery: this.deliveryInfo,
-      total: this.cartService.total$
+      transaction,
+      delivery: this.deliveryInfo
     });
     
     alert('Pedido realizado com sucesso!');
-    this.cartService.clearCart();
     this.close();
   }
 

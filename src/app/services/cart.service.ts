@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { MenuItem } from '../menu/menu.component';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Product } from './product.service';
 
-export interface CartItem extends MenuItem {
+export interface CartItem {
+  product: Product;
   quantity: number;
 }
 
@@ -10,52 +12,67 @@ export interface CartItem extends MenuItem {
   providedIn: 'root'
 })
 export class CartService {
-  private items: CartItem[] = [];
-  private cartSubject = new BehaviorSubject<CartItem[]>([]);
-  private totalSubject = new BehaviorSubject<number>(0);
+  private cartItems = new BehaviorSubject<CartItem[]>([]);
+  cart$ = this.cartItems.asObservable();
 
-  cart$ = this.cartSubject.asObservable();
-  total$ = this.totalSubject.asObservable();
+  cartItemCount$ = this.cart$.pipe(
+    map(items => items.reduce((total, item) => total + item.quantity, 0))
+  );
 
-  addToCart(item: MenuItem) {
-    const existingItem = this.items.find(i => i.id === item.id);
-    
+  cartTotal$ = this.cart$.pipe(
+    map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))
+  );
+
+  constructor() {
+    // Carregar carrinho do localStorage se existir
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      this.cartItems.next(JSON.parse(savedCart));
+    }
+  }
+
+  private saveCart(items: CartItem[]) {
+    localStorage.setItem('cart', JSON.stringify(items));
+    this.cartItems.next(items);
+  }
+
+  addToCart(product: Product, quantity: number = 1) {
+    const currentItems = this.cartItems.value;
+    const existingItem = currentItems.find(item => item.product.id === product.id);
+
     if (existingItem) {
-      existingItem.quantity += 1;
+      const updatedItems = currentItems.map(item =>
+        item.product.id === product.id
+          ? { ...item, quantity: item.quantity + quantity }
+          : item
+      );
+      this.saveCart(updatedItems);
     } else {
-      this.items.push({ ...item, quantity: 1 });
+      this.saveCart([...currentItems, { product, quantity }]);
     }
+  }
+
+  removeFromCart(productId: string) {
+    const updatedItems = this.cartItems.value.filter(item => item.product.id !== productId);
+    this.saveCart(updatedItems);
+  }
+
+  updateQuantity(productId: string, quantity: number) {
+    const updatedItems = this.cartItems.value.map(item =>
+      item.product.id === productId
+        ? { ...item, quantity: Math.max(0, quantity) }
+        : item
+    ).filter(item => item.quantity > 0);
     
-    this.updateCart();
-  }
-
-  removeFromCart(itemId: string) {
-    this.items = this.items.filter(item => item.id !== itemId);
-    this.updateCart();
-  }
-
-  updateQuantity(itemId: string, quantity: number) {
-    const item = this.items.find(i => i.id === itemId);
-    if (item) {
-      item.quantity = quantity;
-      if (quantity <= 0) {
-        this.removeFromCart(itemId);
-      } else {
-        this.updateCart();
-      }
-    }
-  }
-
-  private updateCart() {
-    this.cartSubject.next(this.items);
-    this.totalSubject.next(
-      this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
-    );
+    this.saveCart(updatedItems);
   }
 
   clearCart() {
-    this.items = [];
-    this.updateCart();
+    this.saveCart([]);
+  }
+
+  getCartItems(): CartItem[] {
+    return this.cartItems.value;
   }
 
   checkout() {

@@ -1,0 +1,72 @@
+<div class="inventory-container">
+  <h2>Gerenciamento de Estoque</h2>
+
+  <div class="product-form">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Nome do Produto</label>
+        <input id="name" type="text" formControlName="name">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descrição</label>
+        <textarea id="description" formControlName="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Preço</label>
+        <input id="price" type="number" formControlName="price" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label for="category">Categoria</label>
+        <select id="category" formControlName="category">
+          <option value="combos">Combos</option>
+          <option value="burger">Hambúrgueres</option>
+          <option value="side">Acompanhamentos</option>
+          <option value="drink">Bebidas</option>
+          <option value="sauce">Molhos</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="image">Imagem</label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+        <img *ngIf="productForm.get('imageUrl')?.value" [src]="productForm.get('imageUrl')?.value" alt="Preview">
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="!productForm.valid || isLoading">
+          {{ editingProduct ? 'Atualizar' : 'Adicionar' }} Produto
+        </button>
+        <button type="button" (click)="resetForm()" *ngIf="editingProduct">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="products-list">
+    <h3>Produtos Cadastrados</h3>
+    
+    <div class="products-grid" *ngIf="products$ | async as products">
+      <div class="product-card" *ngFor="let product of products">
+        <img [src]="product.imageUrl" [alt]="product.name">
+        <div class="product-info">
+          <h4>{{product.name}}</h4>
+          <p>{{product.description}}</p>
+          <p class="price">R$ {{product.price.toFixed(2)}}</p>
+          <p class="category">{{product.category}}</p>
+        </div>
+        <div class="product-actions">
+          <button (click)="editProduct(product)" class="edit-btn">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button (click)="deleteProduct(product.id!)" class="delete-btn">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

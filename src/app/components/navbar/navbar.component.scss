@@ -41,16 +41,12 @@ nav {
         border-radius: 1px;
       }
 
-      &:hover::after {
-        width: 100%;
+      &:hover, &:active, &.active {
+        color: #e84c3d;
       }
 
-      &.active {
-        color: #e84c3d;
-        
-        &::after {
-          width: 100%;
-        }
+      &:hover::after, &:active::after, &.active::after {
+        width: 100%;
       }
     }
 
@@ -92,16 +88,25 @@ nav {
     padding: 1rem 0;
     flex-wrap: wrap;
     gap: 1rem;
+    flex-direction: column;
 
     img {
       height: 60px;
+      width: auto;
     }
 
     .nav-links {
       gap: 1.5rem;
+      width: 100%;
+      justify-content: center;
       
       a {
         font-size: 0.8rem;
+        align-self: center;
+        
+        img {
+          height: 50px;
+        }
       }
     }
   }

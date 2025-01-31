@@ -1,0 +1,154 @@
+<div class="orders-container">
+  <h2>Gerenciamento de Pedidos</h2>
+
+  <div class="orders-sections">
+    <!-- Pedidos em Andamento -->
+    <section class="orders-section">
+      <h3>Em Andamento</h3>
+      <div class="orders-list" *ngIf="inProgressOrders$ | async as inProgressOrders">
+        <div class="order-card" *ngFor="let order of inProgressOrders">
+          <div class="order-header">
+            <span class="order-id">Pedido #{{order.id}}</span>
+            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-status" [ngClass]="getStatusClass(order.status)">
+              {{getStatusText(order.status)}}
+            </span>
+          </div>
+
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name">
+              <div class="item-details">
+                <h4>{{item.product.name}}</h4>
+                <p>Quantidade: {{item.quantity}}</p>
+                <p>Preço unitário: R$ {{item.product.price.toFixed(2)}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-footer">
+            <div class="order-total">
+              <span>Total do Pedido:</span>
+              <strong>R$ {{order.total.toFixed(2)}}</strong>
+            </div>
+            <div class="order-actions">
+              <button (click)="updateOrderStatus(order.id!, 'delivering')">
+                Marcar Em Entrega
+              </button>
+              <button (click)="cancelOrder(order.id!)">
+                Cancelar Pedido
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pedidos em Entrega -->
+    <section class="orders-section">
+      <h3>Em Entrega</h3>
+      <div class="orders-list" *ngIf="deliveringOrders$ | async as deliveringOrders">
+        <div class="order-card" *ngFor="let order of deliveringOrders">
+          <div class="order-header">
+            <span class="order-id">Pedido #{{order.id}}</span>
+            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-status" [ngClass]="getStatusClass(order.status)">
+              {{getStatusText(order.status)}}
+            </span>
+          </div>
+
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name">
+              <div class="item-details">
+                <h4>{{item.product.name}}</h4>
+                <p>Quantidade: {{item.quantity}}</p>
+                <p>Preço unitário: R$ {{item.product.price.toFixed(2)}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-footer">
+            <div class="order-total">
+              <span>Total do Pedido:</span>
+              <strong>R$ {{order.total.toFixed(2)}}</strong>
+            </div>
+            <div class="order-actions">
+              <button (click)="updateOrderStatus(order.id!, 'delivered')">
+                Marcar como Entregue
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pedidos Entregues -->
+    <section class="orders-section">
+      <h3>Entregues</h3>
+      <div class="orders-list" *ngIf="deliveredOrders$ | async as deliveredOrders">
+        <div class="order-card" *ngFor="let order of deliveredOrders">
+          <div class="order-header">
+            <span class="order-id">Pedido #{{order.id}}</span>
+            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-status" [ngClass]="getStatusClass(order.status)">
+              {{getStatusText(order.status)}}
+            </span>
+          </div>
+
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name">
+              <div class="item-details">
+                <h4>{{item.product.name}}</h4>
+                <p>Quantidade: {{item.quantity}}</p>
+                <p>Preço unitário: R$ {{item.product.price.toFixed(2)}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-footer">
+            <div class="order-total">
+              <span>Total do Pedido:</span>
+              <strong>R$ {{order.total.toFixed(2)}}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pedidos Cancelados -->
+    <section class="orders-section">
+      <h3>Cancelados</h3>
+      <div class="orders-list" *ngIf="canceledOrders$ | async as canceledOrders">
+        <div class="order-card" *ngFor="let order of canceledOrders">
+          <div class="order-header">
+            <span class="order-id">Pedido #{{order.id}}</span>
+            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-status" [ngClass]="getStatusClass(order.status)">
+              {{getStatusText(order.status)}}
+            </span>
+          </div>
+
+          <div class="order-items">
+            <div class="order-item" *ngFor="let item of order.items">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name">
+              <div class="item-details">
+                <h4>{{item.product.name}}</h4>
+                <p>Quantidade: {{item.quantity}}</p>
+                <p>Preço unitário: R$ {{item.product.price.toFixed(2)}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="order-footer">
+            <div class="order-total">
+              <span>Total do Pedido:</span>
+              <strong>R$ {{order.total.toFixed(2)}}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

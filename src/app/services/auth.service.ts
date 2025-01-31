@@ -1,102 +1,39 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { BehaviorSubject } from 'rxjs';
-
-export interface UserRole {
-  id: string;
-  role: 'admin' | 'customer';
-  email: string;
-}
+import { Auth, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private supabase: SupabaseClient;
-  private userSubject = new BehaviorSubject<User | null>(null);
-  private userRoleSubject = new BehaviorSubject<UserRole | null>(null);
+  user$ = user(this.auth);
+  
+  isAdmin$ = this.user$.pipe(
+    map(user => user?.email === 'admin@example.com')
+  );
 
-  user$ = this.userSubject.asObservable();
-  userRole$ = this.userRoleSubject.asObservable();
+  constructor(private auth: Auth) {}
 
-  constructor() {
-    this.supabase = createClient(
-      process.env['SUPABASE_URL'] || '',
-      process.env['SUPABASE_KEY'] || ''
-    );
-
-    // Verificar sessão atual
-    this.supabase.auth.getSession().then(({ data: { session } }) => {
-      this.userSubject.next(session?.user || null);
-      if (session?.user) {
-        this.loadUserRole(session.user.id);
-      }
-    });
-
-    // Monitorar mudanças de autenticação
-    this.supabase.auth.onAuthStateChange((event, session) => {
-      this.userSubject.next(session?.user || null);
-      if (session?.user) {
-        this.loadUserRole(session.user.id);
-      } else {
-        this.userRoleSubject.next(null);
-      }
-    });
+  getCurrentUser() {
+    return this.auth.currentUser;
   }
 
-  async signUp(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signUp({
-      email,
-      password
-    });
-
-    if (error) throw error;
-
-    // Criar registro de role do usuário (customer por padrão)
-    if (data.user) {
-      await this.supabase
-        .from('user_roles')
-        .insert({
-          id: data.user.id,
-          role: 'customer',
-          email: data.user.email
-        });
+  async login(email: string, password: string) {
+    try {
+      const result = await signInWithEmailAndPassword(this.auth, email, password);
+      return result;
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      throw error;
     }
-
-    return data;
   }
 
-  async signIn(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) throw error;
-    return data;
-  }
-
-  async signOut() {
-    const { error } = await this.supabase.auth.signOut();
-    if (error) throw error;
-  }
-
-  private async loadUserRole(userId: string) {
-    const { data, error } = await this.supabase
-      .from('user_roles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (error) throw error;
-    this.userRoleSubject.next(data);
-  }
-
-  isAdmin(): boolean {
-    return this.userRoleSubject.value?.role === 'admin';
-  }
-
-  isCustomer(): boolean {
-    return this.userRoleSubject.value?.role === 'customer';
+  async logout() {
+    try {
+      await signOut(this.auth);
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      throw error;
+    }
   }
 }

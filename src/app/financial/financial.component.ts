@@ -4,14 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { FinancialService, Transaction } from '../services/financial.service';
 import { OrderService } from '../services/order.service';
 import { Chart } from 'chart.js/auto';
+import { NavbarComponent } from '../components/navbar/navbar.component';
+
+interface FinancialSummary {
+  income: number;
+  expenses: number;
+  profit: number;
+}
 
 @Component({
   selector: 'app-financial',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NavbarComponent],
   template: `
     <div class="container">
-      <h2>Financeiro</h2>
+      <app-navbar></app-navbar>
       
       <div class="summary-cards">
         <div class="card">
@@ -55,14 +62,13 @@ import { Chart } from 'chart.js/auto';
         </thead>
         <tbody>
           <tr *ngFor="let transaction of transactions">
-            <td>{{transaction.date.toLocaleDateString()}}</td>
-            <td>{{transaction.type === 'income' ? 'Receita' : 'Despesa'}}</td>
-            <td [class.income]="transaction.type === 'income'"
-                [class.expense]="transaction.type === 'expense'">
-              R$ {{transaction.amount.toFixed(2)}}
+            <td>{{ transaction.date.toDate() | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td [class.income]="transaction.type === 'income'" [class.expense]="transaction.type === 'expense'">
+              {{ transaction.type === 'income' ? 'Receita' : 'Despesa' }}
             </td>
-            <td>{{transaction.description}}</td>
-            <td>{{transaction.category}}</td>
+            <td>R$ {{ transaction.amount.toFixed(2) }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.category }}</td>
           </tr>
         </tbody>
       </table>
@@ -70,65 +76,145 @@ import { Chart } from 'chart.js/auto';
   `,
   styles: [`
     .container {
-      padding: 20px;
+      padding: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
     }
 
     .summary-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .card {
-      padding: 20px;
+      background: #2a2a2a;
+      padding: 1.5rem;
       border-radius: 8px;
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    .amount {
-      font-size: 24px;
-      font-weight: bold;
-    }
+      h3 {
+        color: #999;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
 
-    .income { color: #28a745; }
-    .expense { color: #dc3545; }
-    .profit { color: #28a745; }
-    .loss { color: #dc3545; }
+      .amount {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin: 0;
+
+        &.income {
+          color: #2ecc71;
+        }
+
+        &.expense {
+          color: #e74c3c;
+        }
+
+        &.profit {
+          color: #2ecc71;
+        }
+
+        &.loss {
+          color: #e74c3c;
+        }
+      }
+    }
 
     .chart-container {
-      margin: 30px 0;
-      height: 400px;
+      background: #2a2a2a;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
     }
 
     .actions {
-      margin: 20px 0;
       display: flex;
-      gap: 10px;
+      gap: 1rem;
+      margin-bottom: 2rem;
+
+      .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.3s;
+
+        &.btn-primary {
+          background: #e84c3d;
+          color: #fff;
+
+          &:hover {
+            background: darken(#e84c3d, 10%);
+          }
+        }
+      }
     }
 
     .transactions-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+
+      th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #444;
+      }
+
+      th {
+        background: #333;
+        color: #999;
+        font-weight: 500;
+      }
+
+      td {
+        color: #fff;
+
+        &.income {
+          color: #2ecc71;
+        }
+
+        &.expense {
+          color: #e74c3c;
+        }
+      }
+
+      tbody tr:hover {
+        background: #333;
+      }
     }
 
-    .transactions-table th,
-    .transactions-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
 
-    .transactions-table th {
-      background-color: #f8f9fa;
+      .summary-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .transactions-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
     }
   `]
 })
 export class FinancialComponent implements OnInit {
   transactions: Transaction[] = [];
-  summary = {
+  summary: FinancialSummary = {
     income: 0,
     expenses: 0,
     profit: 0
@@ -141,18 +227,43 @@ export class FinancialComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    await this.loadData();
+    await this.loadTransactions();
+    this.calculateSummary();
     this.createChart();
   }
 
-  async loadData() {
-    this.transactions = await this.financialService.getTransactions();
-    this.summary = await this.financialService.getFinancialSummary();
+  private async loadTransactions() {
+    try {
+      this.transactions = await this.financialService.getTransactions();
+      this.transactions.sort((a, b) => b.date.toMillis() - a.date.toMillis());
+    } catch (error) {
+      console.error('Erro ao carregar transações:', error);
+    }
   }
 
-  createChart() {
+  private calculateSummary() {
+    this.summary = this.transactions.reduce((acc, transaction) => {
+      if (transaction.type === 'income') {
+        acc.income += transaction.amount;
+      } else {
+        acc.expenses += transaction.amount;
+      }
+      acc.profit = acc.income - acc.expenses;
+      return acc;
+    }, {
+      income: 0,
+      expenses: 0,
+      profit: 0
+    });
+  }
+
+  private createChart() {
     const ctx = document.getElementById('financialChart') as HTMLCanvasElement;
     if (!ctx) return;
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
 
     const monthlyData = this.getMonthlyData();
 
@@ -164,38 +275,61 @@ export class FinancialComponent implements OnInit {
           {
             label: 'Receitas',
             data: monthlyData.income,
-            borderColor: '#28a745',
-            tension: 0.1
+            borderColor: '#2ecc71',
+            tension: 0.4
           },
           {
             label: 'Despesas',
             data: monthlyData.expenses,
-            borderColor: '#dc3545',
-            tension: 0.1
+            borderColor: '#e74c3c',
+            tension: 0.4
           }
         ]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#f5f5f5'
+            }
+          }
+        },
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#f5f5f5'
+            }
+          },
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)'
+            },
+            ticks: {
+              color: '#f5f5f5'
+            }
           }
         }
       }
     });
   }
 
-  getMonthlyData() {
-    const months: { [key: string]: { income: number, expenses: number } } = {};
+  private getMonthlyData() {
+    const months: { [key: string]: { income: number; expenses: number } } = {};
     
     this.transactions.forEach(transaction => {
-      const monthKey = transaction.date.toISOString().slice(0, 7);
+      const date = transaction.date.toDate();
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      
       if (!months[monthKey]) {
         months[monthKey] = { income: 0, expenses: 0 };
       }
-      
+
       if (transaction.type === 'income') {
         months[monthKey].income += transaction.amount;
       } else {
@@ -203,23 +337,37 @@ export class FinancialComponent implements OnInit {
       }
     });
 
-    const sortedMonths = Object.keys(months).sort();
+    const sortedMonths = Object.entries(months)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(-6);
 
     return {
-      labels: sortedMonths.map(month => {
+      labels: sortedMonths.map(([month]) => {
         const [year, monthNum] = month.split('-');
         return `${monthNum}/${year}`;
       }),
-      income: sortedMonths.map(month => months[month].income),
-      expenses: sortedMonths.map(month => months[month].expenses)
+      income: sortedMonths.map(([_, data]) => data.income),
+      expenses: sortedMonths.map(([_, data]) => data.expenses)
     };
   }
 
   async exportFinancialData() {
-    await this.financialService.exportToSheet();
+    try {
+      const transactions = await this.financialService.getTransactions();
+      // Implementar exportação
+      console.log('Exportando dados financeiros:', transactions);
+    } catch (error) {
+      console.error('Erro ao exportar dados financeiros:', error);
+    }
   }
 
   async exportOrderData() {
-    await this.orderService.exportToSheet();
+    try {
+      await this.orderService.exportToSheet();
+      alert('Dados de pedidos exportados com sucesso!');
+    } catch (error) {
+      console.error('Erro ao exportar dados de pedidos:', error);
+      alert('Erro ao exportar dados de pedidos. Tente novamente.');
+    }
   }
 }

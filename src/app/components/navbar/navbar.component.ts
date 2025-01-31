@@ -13,7 +13,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  @Input() variant: 'home' | 'dashboard' = 'dashboard';
+  @Input() variant: 'home' | 'dashboard' | 'about' = 'dashboard';
   @ViewChild(CartComponent) cartComponent!: CartComponent;
 
   cartCount$ = this.cartService.cart$.pipe(

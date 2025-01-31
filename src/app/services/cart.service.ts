@@ -57,4 +57,13 @@ export class CartService {
     this.items = [];
     this.updateCart();
   }
+
+  checkout() {
+    const transaction = {
+      items: [...this.items],
+      total: this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
+    };
+    this.clearCart();
+    return transaction;
+  }
 }

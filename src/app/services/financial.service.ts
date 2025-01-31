@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, addDoc, query, getDocs, orderBy, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, getDocs, orderBy, where, Timestamp } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 
 export interface Transaction {
@@ -8,7 +8,7 @@ export interface Transaction {
   amount: number;
   description: string;
   category: string;
-  date: Date;
+  date: Timestamp;
   orderId?: string;
 }
 
@@ -20,10 +20,7 @@ export class FinancialService {
 
   async addTransaction(transaction: Omit<Transaction, 'id'>) {
     const transactionsRef = collection(this.firestore, 'transactions');
-    return addDoc(transactionsRef, {
-      ...transaction,
-      date: new Date(transaction.date)
-    });
+    return addDoc(transactionsRef, transaction);
   }
 
   async getTransactions(startDate?: Date, endDate?: Date) {
@@ -32,8 +29,8 @@ export class FinancialService {
     
     if (startDate && endDate) {
       q = query(q, 
-        where('date', '>=', startDate),
-        where('date', '<=', endDate)
+        where('date', '>=', Timestamp.fromDate(startDate)),
+        where('date', '<=', Timestamp.fromDate(endDate))
       );
     }
 
@@ -78,7 +75,7 @@ export class FinancialService {
     const headers = ['ID', 'Data', 'Tipo', 'Valor', 'Descrição', 'Categoria', 'ID do Pedido'];
     const rows = transactions.map(transaction => [
       transaction.id,
-      transaction.date.toLocaleString(),
+      transaction.date.toDate().toLocaleString(),
       transaction.type === 'income' ? 'Receita' : 'Despesa',
       transaction.amount.toFixed(2),
       transaction.description,

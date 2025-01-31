@@ -12,6 +12,10 @@
         <span class="cart-count" *ngIf="cartCount$ | async as count">{{count}}</span>
       </button>
     </ng-container>
+    <ng-container *ngIf="variant === 'about'">
+      <a [routerLink]="['/']">Home</a>
+      <a [routerLink]="['/menu']">Cardápio</a>
+    </ng-container>
   </div>
 </nav>
 

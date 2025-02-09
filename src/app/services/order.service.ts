@@ -1,20 +1,5 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { Firestore, collection, addDoc, query, getDocs, orderBy, Timestamp } from '@angular/fire/firestore';
-import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-export interface Order {
-  id?: string;
-  items: any[];
-  total: number;
-  customerName: string;
-  customerPhone: string;
-  status: 'pending' | 'preparing' | 'delivered';
-  createdAt: Timestamp;
-  paymentMethod: string;
-=======
-import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, collectionData, query, where } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, collectionData, query, where, orderBy, Timestamp, getDocs, QueryDocumentSnapshot, DocumentData } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Product } from './product.service';
@@ -24,7 +9,11 @@ export interface OrderItem {
   quantity: number;
 }
 
-export type OrderStatus = 'canceled' | 'in_progress' | 'delivering' | 'delivered';
+export enum OrderStatus {
+  Pending = 'pending',
+  Processing = 'processing',
+  Delivered = 'delivered'
+}
 
 export interface Order {
   id?: string;
@@ -34,7 +23,9 @@ export interface Order {
   status: OrderStatus;
   createdAt: Date;
   updatedAt: Date;
->>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
+  customerName: string;
+  customerPhone: string;
+  paymentMethod: string;
 }
 
 @Injectable({
@@ -43,13 +34,13 @@ export interface Order {
 export class OrderService {
   constructor(private firestore: Firestore) {}
 
-<<<<<<< HEAD
   async createOrder(order: Omit<Order, 'id' | 'createdAt'>) {
     const ordersRef = collection(this.firestore, 'orders');
     const newOrder = {
       ...order,
-      createdAt: Timestamp.now(),
-      status: 'pending'
+      createdAt: new Date(),
+      status: OrderStatus.Pending,
+      updatedAt: new Date()
     };
     return addDoc(ordersRef, newOrder);
   }
@@ -91,29 +82,19 @@ export class OrderService {
     ];
 
     const rows = orders.map(order => [
-      order.createdAt.toDate().toLocaleString(),
+      order.createdAt.toLocaleString(),
       order.customerName,
       order.customerPhone,
       order.total.toFixed(2),
       order.status,
       order.paymentMethod,
-      order.items.map(item => `${item.name} (${item.quantity}x)`).join(', ')
+      order.items.map(item => `${item.product.name} (${item.quantity}x)`).join(', ')
     ]);
 
     return [
       headers.join(','),
       ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
-=======
-  // Criar um novo pedido
-  async createOrder(order: Omit<Order, 'id'>) {
-    const ordersRef = collection(this.firestore, 'orders');
-    return addDoc(ordersRef, {
-      ...order,
-      status: 'in_progress',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    });
   }
 
   // Obter todos os pedidos
@@ -157,17 +138,20 @@ export class OrderService {
 
   // Cancelar pedido
   async cancelOrder(orderId: string) {
-    return this.updateOrderStatus(orderId, 'canceled');
+    return this.updateOrderStatus(orderId, OrderStatus.Pending);
   }
 
   // Marcar pedido como em entrega
   async markAsDelivering(orderId: string) {
-    return this.updateOrderStatus(orderId, 'delivering');
+    return this.updateOrderStatus(orderId, OrderStatus.Processing);
   }
 
   // Marcar pedido como entregue
   async markAsDelivered(orderId: string) {
-    return this.updateOrderStatus(orderId, 'delivered');
->>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
+    return this.updateOrderStatus(orderId, OrderStatus.Delivered);
+  }
+
+  async deleteOrder(orderId: string): Promise<void> {
+    await deleteDoc(doc(this.firestore, 'orders', orderId));
   }
 }

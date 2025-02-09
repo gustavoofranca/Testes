@@ -14,6 +14,7 @@ export class InventoryComponent implements OnInit {
   productForm: FormGroup;
   editingProduct: Product | null = null;
   isLoading = false;
+  selectedImage: any;
 
   constructor(
     private productService: ProductService,
@@ -44,6 +45,7 @@ export class InventoryComponent implements OnInit {
         const productId = this.editingProduct?.id || Date.now().toString();
         const imageUrl = await this.storageService.uploadProductImage(file, productId);
         this.productForm.patchValue({ imageUrl });
+        this.selectedImage = file;
       } catch (error) {
         console.error('Erro ao fazer upload da imagem:', error);
       } finally {
@@ -60,7 +62,7 @@ export class InventoryComponent implements OnInit {
         if (this.editingProduct) {
           await this.productService.updateProduct(this.editingProduct.id!, productData);
         } else {
-          await this.productService.addProduct(productData);
+          await this.productService.addProduct(productData, this.selectedImage);
         }
         
         this.resetForm();
@@ -81,10 +83,10 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  async deleteProduct(productId: string) {
+  async deleteProduct(productId: string, imageUrl: string) {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       try {
-        await this.productService.deleteProduct(productId);
+        await this.productService.deleteProduct(productId, imageUrl);
       } catch (error) {
         console.error('Erro ao deletar produto:', error);
       }
@@ -94,5 +96,6 @@ export class InventoryComponent implements OnInit {
   resetForm() {
     this.editingProduct = null;
     this.productForm.reset();
+    this.selectedImage = null;
   }
 }

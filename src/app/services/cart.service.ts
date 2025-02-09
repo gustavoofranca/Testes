@@ -4,6 +4,10 @@ import { map } from 'rxjs/operators';
 import { Product } from './product.service';
 
 export interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
   product: Product;
   quantity: number;
 }
@@ -19,7 +23,7 @@ export class CartService {
     map(items => items.reduce((total, item) => total + item.quantity, 0))
   );
 
-  cartTotal$ = this.cart$.pipe(
+  total$ = this.cart$.pipe(
     map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))
   );
 
@@ -36,10 +40,10 @@ export class CartService {
     this.cartItems.next(items);
   }
 
-  addToCart(product: Product, quantity: number = 1) {
+  addToCart(product: Product, quantity: number = 1): void {
     const currentItems = this.cartItems.value;
     const existingItem = currentItems.find(item => item.product.id === product.id);
-
+    
     if (existingItem) {
       const updatedItems = currentItems.map(item =>
         item.product.id === product.id
@@ -48,7 +52,7 @@ export class CartService {
       );
       this.saveCart(updatedItems);
     } else {
-      this.saveCart([...currentItems, { product, quantity }]);
+      this.saveCart([...currentItems, { id: product.id!, name: product.name, price: product.price, imageUrl: product.imageUrl, product, quantity }]);
     }
   }
 
@@ -77,8 +81,8 @@ export class CartService {
 
   checkout() {
     const transaction = {
-      items: [...this.items],
-      total: this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
+      items: [...this.getCartItems()],
+      total: this.getCartItems().reduce((total, item) => total + (item.product.price * item.quantity), 0)
     };
     this.clearCart();
     return transaction;

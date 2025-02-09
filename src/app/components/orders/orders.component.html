@@ -32,7 +32,7 @@
               <strong>R$ {{order.total.toFixed(2)}}</strong>
             </div>
             <div class="order-actions">
-              <button (click)="updateOrderStatus(order.id!, 'delivering')">
+              <button (click)="updateOrderStatus(order.id!, OrderStatus.Delivering)">
                 Marcar Em Entrega
               </button>
               <button (click)="cancelOrder(order.id!)">
@@ -74,7 +74,7 @@
               <strong>R$ {{order.total.toFixed(2)}}</strong>
             </div>
             <div class="order-actions">
-              <button (click)="updateOrderStatus(order.id!, 'delivered')">
+              <button (click)="updateOrderStatus(order.id!, OrderStatus.Delivered)">
                 Marcar como Entregue
               </button>
             </div>

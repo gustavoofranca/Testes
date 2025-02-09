@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderService, Order } from '../services/order.service';
 import { Chart } from 'chart.js/auto';
 import { Subscription } from 'rxjs';
+import { OrderStatus } from '../services/order.service';
 
 interface DashboardStats {
   totalSales: number;
@@ -70,7 +71,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     return orders.filter(order => {
-      const orderDate = order.createdAt.toDate();
+      const orderDate = order.createdAt;
       return orderDate >= startDate;
     });
   }
@@ -84,8 +85,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       totalOrders,
       averageTicket: totalOrders > 0 ? totalSales / totalOrders : 0,
       profit: totalSales * 0.3, // 30% de lucro estimado
-      pendingOrders: orders.filter(o => o.status === 'pending').length,
-      deliveredOrders: orders.filter(o => o.status === 'delivered').length
+      pendingOrders: orders.filter(o => o.status === OrderStatus.Pending).length,
+      deliveredOrders: orders.filter(o => o.status === OrderStatus.Delivered).length
     };
   }
 

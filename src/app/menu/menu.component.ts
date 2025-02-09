@@ -6,14 +6,18 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
 import { CartComponent } from '../components/cart/cart.component';
 import { CartService } from '../services/cart.service';
 
-export interface MenuItem {
+interface Product {
   id: string;
   name: string;
   price: number;
   description: string;
-  category: 'combo' | 'burger' | 'side' | 'drink';
   imageUrl: string;
   rating?: number;
+}
+
+export interface MenuItem extends Product {
+  category: 'combo' | 'burger' | 'side' | 'drink';
+  available: boolean;
 }
 
 @Component({
@@ -30,7 +34,8 @@ export class MenuComponent {
       price: 29.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela e molho especial. Acompanha batata frita e Refri lata.',
       category: 'combo',
-      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500',
+      available: true
     },
     {
       id: '2',
@@ -38,7 +43,8 @@ export class MenuComponent {
       price: 31.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela, alface, tomate e molho especial. Acompanha batata frita e Refri lata.',
       category: 'combo',
-      imageUrl: 'https://as2.ftcdn.net/jpg/00/92/04/47/1000_F_92044757_K6rFzZN9mBNu7w8aJFNwEAhzkV0tefUo.jpg'
+      imageUrl: 'https://as2.ftcdn.net/jpg/00/92/04/47/1000_F_92044757_K6rFzZN9mBNu7w8aJFNwEAhzkV0tefUo.jpg',
+      available: true
     },
     {
       id: '3',
@@ -46,7 +52,8 @@ export class MenuComponent {
       price: 33.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela, tiras de bacon, alface, tomate e molho especial. Acompanha batata frita e Refri lata.',
       category: 'combo',
-      imageUrl: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500',
+      available: true
     },
     {
       id: '4',
@@ -54,7 +61,8 @@ export class MenuComponent {
       price: 19.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela e molho especial.',
       category: 'burger',
-      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500',
+      available: true
     },
     {
       id: '5',
@@ -62,7 +70,8 @@ export class MenuComponent {
       price: 21.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela, alface, tomate e molho especial.',
       category: 'burger',
-      imageUrl: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?w=500',
+      available: true
     },
     {
       id: '6',
@@ -70,7 +79,8 @@ export class MenuComponent {
       price: 23.90,
       description: 'Pão macio, hamburguer de costela 180g, queijo mussarela, tiras de bacon, alface, tomate e molho especial.',
       category: 'burger',
-      imageUrl: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=500',
+      available: true
     },
     {
       id: '7',
@@ -78,7 +88,8 @@ export class MenuComponent {
       price: 5.90,
       description: 'Porção de batatas fritas crocantes',
       category: 'side',
-      imageUrl: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?w=500',
+      available: true
     },
     {
       id: '8',
@@ -86,7 +97,8 @@ export class MenuComponent {
       price: 2.49,
       description: 'Porção adicional de bacon',
       category: 'side',
-      imageUrl: 'https://images.unsplash.com/photo-1528607929212-2636ec44253e?w=500'
+      imageUrl: 'https://images.unsplash.com/photo-1528607929212-2636ec44253e?w=500',
+      available: true
     },
     {
       id: '9',
@@ -94,7 +106,8 @@ export class MenuComponent {
       price: 3.00,
       description: 'Maionese especial Gusta\'s',
       category: 'side',
-      imageUrl: 'https://i.ibb.co/BVcg3Gdm/Novo-Projeto-1.png'
+      imageUrl: 'https://i.ibb.co/BVcg3Gdm/Novo-Projeto-1.png',
+      available: true
     },
     {
       id: '10',
@@ -102,7 +115,8 @@ export class MenuComponent {
       price: 5.90,
       description: 'Lata 350ml',
       category: 'drink',
-      imageUrl: 'https://i.ibb.co/xnh4H9Z/image.png'
+      imageUrl: 'https://i.ibb.co/xnh4H9Z/image.png',
+      available: true
     },
     {
       id: '11',
@@ -110,7 +124,8 @@ export class MenuComponent {
       price: 5.90,
       description: 'Lata 350ml',
       category: 'drink',
-      imageUrl: 'https://confeiteiro.agilecdn.com.br/11464.png'
+      imageUrl: 'https://confeiteiro.agilecdn.com.br/11464.png',
+      available: true
     },
     {
       id: '12',
@@ -118,7 +133,8 @@ export class MenuComponent {
       price: 5.90,
       description: 'Lata 350ml',
       category: 'drink',
-      imageUrl: 'https://i.ibb.co/v47Czbt6/image-2.png'
+      imageUrl: 'https://i.ibb.co/v47Czbt6/image-2.png',
+      available: true
     },
     {
       id: '13',
@@ -126,7 +142,8 @@ export class MenuComponent {
       price: 5.90,
       description: 'Lata 350ml',
       category: 'drink',
-      imageUrl: 'https://i.ibb.co/xqbcNMH9/image-3.png'
+      imageUrl: 'https://i.ibb.co/xqbcNMH9/image-3.png',
+      available: true
     }
   ];
 

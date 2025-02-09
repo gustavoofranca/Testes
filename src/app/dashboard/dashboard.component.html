@@ -57,7 +57,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let order of recentOrders">
-          <td>{{ order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>{{ order.customerName }}</td>
           <td>R$ {{ order.total.toFixed(2) }}</td>
           <td>

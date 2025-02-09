@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getStorage, provideStorage } from '@angular/fire/storage';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { CommonModule } from '@angular/common';
 
 import { environment } from '../environments/environment';
@@ -16,7 +16,6 @@ import { routes } from './app.routes';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HomeComponent } from './home/home.component';
 import { MenuComponent } from './menu/menu.component';
-import { CartComponent } from './components/cart/cart.component';
 import { LoginComponent } from './components/login/login.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
@@ -31,6 +30,7 @@ import { CartService } from './services/cart.service';
 import { OrderService } from './services/order.service';
 import { ProductService } from './services/product.service';
 import { InventoryService } from './services/inventory.service';
+import { StorageService } from './services/storage.service';
 
 // Guards
 import { AdminGuard } from './guards/admin.guard';
@@ -41,7 +41,6 @@ import { AdminGuard } from './guards/admin.guard';
     NavbarComponent,
     HomeComponent,
     MenuComponent,
-    CartComponent,
     LoginComponent,
     OrdersComponent,
     InventoryComponent,
@@ -56,19 +55,21 @@ import { AdminGuard } from './guards/admin.guard';
     RouterModule.forRoot(routes),
     ReactiveFormsModule,
     FormsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage())
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule
   ],
   providers: [
+    StorageService,
     AuthService,
     CartService,
     OrderService,
-    ProductService,
     InventoryService,
     AdminGuard
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+// Removido ProductService dos providers

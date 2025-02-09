@@ -10,6 +10,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./orders.component.scss']
 })
 export class OrdersComponent implements OnInit {
+  public OrderStatus = OrderStatus;
+
   canceledOrders$: Observable<Order[]>;
   inProgressOrders$: Observable<Order[]>;
   deliveringOrders$: Observable<Order[]>;
@@ -20,10 +22,10 @@ export class OrdersComponent implements OnInit {
     private orderService: OrderService,
     private authService: AuthService
   ) {
-    this.canceledOrders$ = this.orderService.getOrdersByStatus('canceled');
-    this.inProgressOrders$ = this.orderService.getOrdersByStatus('in_progress');
-    this.deliveringOrders$ = this.orderService.getOrdersByStatus('delivering');
-    this.deliveredOrders$ = this.orderService.getOrdersByStatus('delivered');
+    this.canceledOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Canceled);
+    this.inProgressOrders$ = this.orderService.getOrdersByStatus(OrderStatus.InProgress);
+    this.deliveringOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Delivering);
+    this.deliveredOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Delivered);
   }
 
   ngOnInit() {
@@ -32,34 +34,40 @@ export class OrdersComponent implements OnInit {
         this.isAdmin$.subscribe(isAdmin => {
           if (!isAdmin) {
             // Se não for admin, mostrar apenas os pedidos do usuário
-            this.canceledOrders$ = this.orderService.getUserOrdersByStatus(user.uid, 'canceled');
-            this.inProgressOrders$ = this.orderService.getUserOrdersByStatus(user.uid, 'in_progress');
-            this.deliveringOrders$ = this.orderService.getUserOrdersByStatus(user.uid, 'delivering');
-            this.deliveredOrders$ = this.orderService.getUserOrdersByStatus(user.uid, 'delivered');
+            this.canceledOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Canceled);
+            this.inProgressOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.InProgress);
+            this.deliveringOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Delivering);
+            this.deliveredOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Delivered);
           }
         });
       }
     });
   }
 
+  private statusMap: Record<OrderStatus, string> = {
+    [OrderStatus.Pending]: 'Pendente',
+    [OrderStatus.Processing]: 'Processando',
+    [OrderStatus.Delivering]: 'Em Entrega',
+    [OrderStatus.Delivered]: 'Entregue',
+    [OrderStatus.Canceled]: 'Cancelado',
+    [OrderStatus.InProgress]: 'Em Progresso'
+  };
+
+  private classMap: Record<OrderStatus, string> = {
+    [OrderStatus.Pending]: 'bg-warning',
+    [OrderStatus.Processing]: 'bg-info',
+    [OrderStatus.Delivering]: 'bg-primary',
+    [OrderStatus.Delivered]: 'bg-success',
+    [OrderStatus.Canceled]: 'bg-danger',
+    [OrderStatus.InProgress]: 'bg-secondary'
+  };
+
   getStatusText(status: OrderStatus): string {
-    const statusMap = {
-      'canceled': 'Cancelado',
-      'in_progress': 'Em Andamento',
-      'delivering': 'Em Entrega',
-      'delivered': 'Entregue'
-    };
-    return statusMap[status];
+    return this.statusMap[status];
   }
 
   getStatusClass(status: OrderStatus): string {
-    const classMap = {
-      'canceled': 'status-canceled',
-      'in_progress': 'status-in-progress',
-      'delivering': 'status-delivering',
-      'delivered': 'status-delivered'
-    };
-    return classMap[status];
+    return this.classMap[status];
   }
 
   async updateOrderStatus(orderId: string, status: OrderStatus) {
@@ -76,6 +84,10 @@ export class OrdersComponent implements OnInit {
     } catch (error) {
       console.error('Erro ao excluir pedido:', error);
     }
+  }
+
+  async cancelOrder(orderId: string) {
+    await this.orderService.deleteOrder(orderId);
   }
 
   calculateOrderTotal(order: Order): number {

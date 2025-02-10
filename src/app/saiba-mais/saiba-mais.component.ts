@@ -6,7 +6,9 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-saiba-mais',
   templateUrl: './saiba-mais.component.html',
-  styleUrls: ['./saiba-mais.component.scss']
+  styleUrls: ['./saiba-mais.component.scss'],
+  standalone: true,
+  imports: [CommonModule, RouterModule, NavbarComponent]
 })
 export class SaibaMaisComponent {
 

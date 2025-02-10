@@ -10,9 +10,12 @@ export interface OrderItem {
 }
 
 export enum OrderStatus {
-  Pending = 'pending',
-  Processing = 'processing',
-  Delivered = 'delivered'
+  pending = 'pending',
+  processing = 'processing',
+  delivering = 'delivering',
+  delivered = 'delivered',
+  canceled = 'canceled',
+  in_progress = 'in_progress'
 }
 
 export interface Order {
@@ -39,7 +42,7 @@ export class OrderService {
     const newOrder = {
       ...order,
       createdAt: new Date(),
-      status: OrderStatus.Pending,
+      status: OrderStatus.pending,
       updatedAt: new Date()
     };
     return addDoc(ordersRef, newOrder);
@@ -138,17 +141,17 @@ export class OrderService {
 
   // Cancelar pedido
   async cancelOrder(orderId: string) {
-    return this.updateOrderStatus(orderId, OrderStatus.Pending);
+    return this.updateOrderStatus(orderId, OrderStatus.canceled);
   }
 
   // Marcar pedido como em entrega
   async markAsDelivering(orderId: string) {
-    return this.updateOrderStatus(orderId, OrderStatus.Processing);
+    return this.updateOrderStatus(orderId, OrderStatus.delivering);
   }
 
   // Marcar pedido como entregue
   async markAsDelivered(orderId: string) {
-    return this.updateOrderStatus(orderId, OrderStatus.Delivered);
+    return this.updateOrderStatus(orderId, OrderStatus.delivered);
   }
 
   async deleteOrder(orderId: string): Promise<void> {

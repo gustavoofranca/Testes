@@ -1,3 +1,115 @@
 .home-container {
   padding: 20px;
 }
+
+.hero {
+  position: relative;
+  height: calc(100vh - 64px); /* Altura total menos a altura do navbar */
+  margin-top: -20px; /* Compensar o padding do main-content */
+  margin-left: -20px;
+  margin-right: -20px;
+  background-image: url('/assets/images/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 20px;
+
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+}
+
+.button-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+
+  .btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+
+    &.btn-primary {
+      background-color: #ff4081;
+      color: white;
+      border: none;
+
+      &:hover {
+        background-color: darken(#ff4081, 10%);
+        transform: translateY(-2px);
+      }
+    }
+
+    &.btn-transparent {
+      background-color: transparent;
+      border: 2px solid white;
+      color: white;
+
+      &:hover {
+        background-color: white;
+        color: #333;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+.footer {
+  padding: 3rem 0;
+  text-align: center;
+  background-color: #f8f9fa;
+  margin: 0 -20px -20px -20px;
+
+  .opening-hours {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #333;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+
+    a {
+      color: #333;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #ff4081;
+      }
+    }
+  }
+}

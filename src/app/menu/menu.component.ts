@@ -23,7 +23,9 @@ export interface MenuItem extends Product {
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, NavbarComponent, CartComponent]
 })
 export class MenuComponent {
   searchTerm = '';

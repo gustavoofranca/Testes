@@ -22,10 +22,10 @@ export class OrdersComponent implements OnInit {
     private orderService: OrderService,
     private authService: AuthService
   ) {
-    this.canceledOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Canceled);
-    this.inProgressOrders$ = this.orderService.getOrdersByStatus(OrderStatus.InProgress);
-    this.deliveringOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Delivering);
-    this.deliveredOrders$ = this.orderService.getOrdersByStatus(OrderStatus.Delivered);
+    this.canceledOrders$ = this.orderService.getOrdersByStatus(OrderStatus.canceled);
+    this.inProgressOrders$ = this.orderService.getOrdersByStatus(OrderStatus.in_progress);
+    this.deliveringOrders$ = this.orderService.getOrdersByStatus(OrderStatus.delivering);
+    this.deliveredOrders$ = this.orderService.getOrdersByStatus(OrderStatus.delivered);
   }
 
   ngOnInit() {
@@ -34,10 +34,10 @@ export class OrdersComponent implements OnInit {
         this.isAdmin$.subscribe(isAdmin => {
           if (!isAdmin) {
             // Se não for admin, mostrar apenas os pedidos do usuário
-            this.canceledOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Canceled);
-            this.inProgressOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.InProgress);
-            this.deliveringOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Delivering);
-            this.deliveredOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.Delivered);
+            this.canceledOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.canceled);
+            this.inProgressOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.in_progress);
+            this.deliveringOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.delivering);
+            this.deliveredOrders$ = this.orderService.getUserOrdersByStatus(user.uid, OrderStatus.delivered);
           }
         });
       }
@@ -45,21 +45,21 @@ export class OrdersComponent implements OnInit {
   }
 
   private statusMap: Record<OrderStatus, string> = {
-    [OrderStatus.Pending]: 'Pendente',
-    [OrderStatus.Processing]: 'Processando',
-    [OrderStatus.Delivering]: 'Em Entrega',
-    [OrderStatus.Delivered]: 'Entregue',
-    [OrderStatus.Canceled]: 'Cancelado',
-    [OrderStatus.InProgress]: 'Em Progresso'
+    [OrderStatus.pending]: 'Pendente',
+    [OrderStatus.processing]: 'Processando',
+    [OrderStatus.delivering]: 'Em Entrega',
+    [OrderStatus.delivered]: 'Entregue',
+    [OrderStatus.canceled]: 'Cancelado',
+    [OrderStatus.in_progress]: 'Em Progresso'
   };
 
   private classMap: Record<OrderStatus, string> = {
-    [OrderStatus.Pending]: 'bg-warning',
-    [OrderStatus.Processing]: 'bg-info',
-    [OrderStatus.Delivering]: 'bg-primary',
-    [OrderStatus.Delivered]: 'bg-success',
-    [OrderStatus.Canceled]: 'bg-danger',
-    [OrderStatus.InProgress]: 'bg-secondary'
+    [OrderStatus.pending]: 'bg-warning',
+    [OrderStatus.processing]: 'bg-info',
+    [OrderStatus.delivering]: 'bg-primary',
+    [OrderStatus.delivered]: 'bg-success',
+    [OrderStatus.canceled]: 'bg-danger',
+    [OrderStatus.in_progress]: 'bg-secondary'
   };
 
   getStatusText(status: OrderStatus): string {

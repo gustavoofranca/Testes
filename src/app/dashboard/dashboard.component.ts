@@ -85,8 +85,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       totalOrders,
       averageTicket: totalOrders > 0 ? totalSales / totalOrders : 0,
       profit: totalSales * 0.3, // 30% de lucro estimado
-      pendingOrders: orders.filter(o => o.status === OrderStatus.Pending).length,
-      deliveredOrders: orders.filter(o => o.status === OrderStatus.Delivered).length
+      pendingOrders: orders.filter(o => o.status === OrderStatus.pending).length,
+      deliveredOrders: orders.filter(o => o.status === OrderStatus.delivered).length
     };
   }
 

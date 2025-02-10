@@ -1,5 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
@@ -13,16 +14,19 @@ import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 
 // Components
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { HomeComponent } from './home/home.component';
-import { MenuComponent } from './menu/menu.component';
 import { LoginComponent } from './components/login/login.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
-import { SaibaMaisComponent } from './saiba-mais/saiba-mais.component';
 import { AboutComponent } from './components/about/about.component';
+
+// Standalone Components
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HomeComponent } from './home/home.component';
+import { MenuComponent } from './menu/menu.component';
+import { CartComponent } from './components/cart/cart.component';
+import { SaibaMaisComponent } from './saiba-mais/saiba-mais.component';
 
 // Services
 import { AuthService } from './services/auth.service';
@@ -38,19 +42,16 @@ import { AdminGuard } from './guards/admin.guard';
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
-    HomeComponent,
-    MenuComponent,
     LoginComponent,
     OrdersComponent,
     InventoryComponent,
     DashboardComponent,
     AdminDashboardComponent,
-    SaibaMaisComponent,
     AboutComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
     RouterModule.forRoot(routes),
     ReactiveFormsModule,
@@ -58,7 +59,12 @@ import { AdminGuard } from './guards/admin.guard';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
-    AngularFireStorageModule
+    AngularFireStorageModule,
+    NavbarComponent,
+    HomeComponent,
+    MenuComponent,
+    CartComponent,
+    SaibaMaisComponent
   ],
   providers: [
     StorageService,
@@ -72,4 +78,3 @@ import { AdminGuard } from './guards/admin.guard';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-// Removido ProductService dos providers

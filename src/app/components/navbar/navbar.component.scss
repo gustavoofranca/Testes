@@ -6,7 +6,9 @@ nav {
   left: 0;
   right: 0;
   z-index: 1000;
-  transition: background-color 0.3s ease;
+  height: 64px;
+  display: flex;
+  align-items: center;
 
   &.transparent {
     background-color: transparent;
@@ -19,16 +21,28 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
   }
 
   .nav-brand {
+    a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: inherit;
+    }
+
     img {
       height: 40px;
-      transition: transform 0.3s ease;
-
-      &:hover {
-        transform: scale(1.05);
-      }
+      width: auto;
     }
   }
 
@@ -38,18 +52,17 @@ nav {
     align-items: center;
 
     a {
-      color: #fff;
+      color: white;
       text-decoration: none;
       font-weight: 500;
       transition: color 0.3s ease;
-      position: relative;
 
       &:hover {
-        color: #e84c3d;
+        color: #ff4081;
       }
 
       &.active {
-        color: #e84c3d;
+        color: #ff4081;
 
         &::after {
           content: '';
@@ -58,7 +71,7 @@ nav {
           left: 0;
           width: 100%;
           height: 2px;
-          background-color: #e84c3d;
+          background-color: #ff4081;
         }
       }
     }
@@ -66,34 +79,31 @@ nav {
 
   .nav-actions {
     display: flex;
-    gap: 1rem;
     align-items: center;
+    gap: 1rem;
 
-    button, .login-button {
+    .cart-button {
       background: none;
       border: none;
-      color: #fff;
+      color: white;
       cursor: pointer;
-      font-size: 1.2rem;
-      padding: 0.5rem;
       position: relative;
-      transition: color 0.3s ease;
+      padding: 0.5rem;
 
-      &:hover {
-        color: #e84c3d;
+      i {
+        font-size: 1.2rem;
       }
-    }
 
-    .cart-count {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background-color: #e84c3d;
-      color: #fff;
-      border-radius: 50%;
-      padding: 0.2rem 0.5rem;
-      font-size: 0.8rem;
-      font-weight: bold;
+      .cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #ff4081;
+        color: white;
+        border-radius: 50%;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.8rem;
+      }
     }
 
     .login-button {
@@ -103,7 +113,7 @@ nav {
     }
 
     .logout-button {
-      color: #e84c3d;
+      color: #ff4081;
       
       &:hover {
         color: #d13c2e;

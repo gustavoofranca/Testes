@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderService, Order } from '../services/order.service';
 import { Chart } from 'chart.js/auto';
 import { Subscription } from 'rxjs';
+import { Timestamp } from '@angular/fire/firestore';
 
 interface DashboardStats {
   totalSales: number;
@@ -41,13 +42,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  async updateData() {
-    const orders = await this.orderService.getOrders();
-    const filteredOrders = this.filterOrdersByDate(orders);
-    
-    this.recentOrders = filteredOrders.slice(0, 10);
-    this.calculateStats(filteredOrders);
-    this.updateCharts(filteredOrders);
+  updateData() {
+    this.orderService.getAllOrders().subscribe(orders => {
+      const filteredOrders = this.filterOrdersByDate(orders);
+      this.recentOrders = filteredOrders.slice(0, 10);
+      this.calculateStats(filteredOrders);
+      this.updateCharts(filteredOrders);
+    });
   }
 
   private filterOrdersByDate(orders: Order[]): Order[] {
@@ -84,7 +85,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       totalOrders,
       averageTicket: totalOrders > 0 ? totalSales / totalOrders : 0,
       profit: totalSales * 0.3, // 30% de lucro estimado
-      pendingOrders: orders.filter(o => o.status === 'pending').length,
+      pendingOrders: orders.filter(o => o.status === 'in_progress').length,
       deliveredOrders: orders.filter(o => o.status === 'delivered').length
     };
   }

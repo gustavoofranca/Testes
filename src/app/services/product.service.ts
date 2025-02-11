@@ -1,113 +1,88 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { Firestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { Observable, from } from 'rxjs';
-=======
-import { Firestore, collection, addDoc, updateDoc, deleteDoc, doc, collectionData } from '@angular/fire/firestore';
-import { Storage, ref, uploadBytes, getDownloadURL, deleteObject } from '@angular/fire/storage';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Observable } from 'rxjs';
->>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
 
 export interface Product {
   id?: string;
   name: string;
-<<<<<<< HEAD
-  price: number;
-  description: string;
-  category: string;
-  imageUrl?: string;
-=======
   description: string;
   price: number;
   imageUrl: string;
   category: string;
   available: boolean;
->>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-<<<<<<< HEAD
-  constructor(private firestore: Firestore) {}
+  private productsCollection: AngularFirestoreCollection<Product>;
 
-  async addProduct(product: Product): Promise<string> {
-    const productsRef = collection(this.firestore, 'products');
-    const docRef = await addDoc(productsRef, product);
-    return docRef.id;
-  }
-
-  async getProducts(): Promise<Product[]> {
-    const productsRef = collection(this.firestore, 'products');
-    const snapshot = await getDocs(productsRef);
-    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-  }
-
-  async updateProduct(id: string, product: Partial<Product>): Promise<void> {
-    const productRef = doc(this.firestore, 'products', id);
-    await updateDoc(productRef, product);
-  }
-
-  async deleteProduct(id: string): Promise<void> {
-    const productRef = doc(this.firestore, 'products', id);
-    await deleteDoc(productRef);
-=======
   constructor(
-    private firestore: Firestore,
-    private storage: Storage
-  ) {}
+    private firestore: AngularFirestore,
+    private storage: AngularFireStorage
+  ) {
+    this.productsCollection = this.firestore.collection<Product>('products');
+  }
 
   // Obter todos os produtos
   getProducts(): Observable<Product[]> {
-    const productsRef = collection(this.firestore, 'products');
-    return collectionData(productsRef, { idField: 'id' }) as Observable<Product[]>;
+    return this.productsCollection.valueChanges({ idField: 'id' });
   }
 
   // Adicionar novo produto
   async addProduct(product: Omit<Product, 'id'>, imageFile: File) {
-    const productsRef = collection(this.firestore, 'products');
-    
-    // Upload da imagem
-    const storageRef = ref(this.storage, `products/${imageFile.name}`);
-    const snapshot = await uploadBytes(storageRef, imageFile);
-    const imageUrl = await getDownloadURL(snapshot.ref);
+    const filePath = `products/${new Date().getTime()}_${imageFile.name}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, imageFile);
 
-    // Salvar produto com URL da imagem
-    return addDoc(productsRef, {
-      ...product,
-      imageUrl,
-      available: true
-    });
+    try {
+      await task;
+      const imageUrl = await fileRef.getDownloadURL().toPromise();
+      return this.productsCollection.add({
+        ...product,
+        imageUrl,
+        available: true
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
   }
 
   // Atualizar produto
   async updateProduct(productId: string, updates: Partial<Product>, newImageFile?: File) {
-    const productRef = doc(this.firestore, `products/${productId}`);
-    
     if (newImageFile) {
-      // Upload da nova imagem
-      const storageRef = ref(this.storage, `products/${newImageFile.name}`);
-      const snapshot = await uploadBytes(storageRef, newImageFile);
-      const imageUrl = await getDownloadURL(snapshot.ref);
-      
-      // Atualizar produto com nova URL da imagem
-      return updateDoc(productRef, { ...updates, imageUrl });
+      const filePath = `products/${new Date().getTime()}_${newImageFile.name}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, newImageFile);
+
+      try {
+        await task;
+        const imageUrl = await fileRef.getDownloadURL().toPromise();
+        return this.productsCollection.doc(productId).update({ ...updates, imageUrl });
+      } catch (error) {
+        console.error('Error uploading new image:', error);
+        throw error;
+      }
     }
-    
-    // Atualizar produto sem nova imagem
-    return updateDoc(productRef, updates);
+
+    return this.productsCollection.doc(productId).update(updates);
   }
 
   // Excluir produto
   async deleteProduct(productId: string, imageUrl: string) {
-    // Excluir imagem do storage
-    const imageRef = ref(this.storage, imageUrl);
-    await deleteObject(imageRef);
-    
-    // Excluir documento do produto
-    const productRef = doc(this.firestore, `products/${productId}`);
-    return deleteDoc(productRef);
->>>>>>> 9f22a7ca0676d42b7aa3b78ebeead85e78aa05cb
+    try {
+      // Excluir imagem do storage
+      const imageRef = this.storage.refFromURL(imageUrl);
+      await imageRef.delete().toPromise();
+      
+      // Excluir documento do produto
+      return this.productsCollection.doc(productId).delete();
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
   }
 }

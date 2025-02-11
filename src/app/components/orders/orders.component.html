@@ -9,7 +9,7 @@
         <div class="order-card" *ngFor="let order of inProgressOrders">
           <div class="order-header">
             <span class="order-id">Pedido #{{order.id}}</span>
-            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-date">{{order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm'}}</span>
             <span class="order-status" [ngClass]="getStatusClass(order.status)">
               {{getStatusText(order.status)}}
             </span>
@@ -51,7 +51,7 @@
         <div class="order-card" *ngFor="let order of deliveringOrders">
           <div class="order-header">
             <span class="order-id">Pedido #{{order.id}}</span>
-            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-date">{{order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm'}}</span>
             <span class="order-status" [ngClass]="getStatusClass(order.status)">
               {{getStatusText(order.status)}}
             </span>
@@ -90,7 +90,7 @@
         <div class="order-card" *ngFor="let order of deliveredOrders">
           <div class="order-header">
             <span class="order-id">Pedido #{{order.id}}</span>
-            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-date">{{order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm'}}</span>
             <span class="order-status" [ngClass]="getStatusClass(order.status)">
               {{getStatusText(order.status)}}
             </span>
@@ -124,7 +124,7 @@
         <div class="order-card" *ngFor="let order of canceledOrders">
           <div class="order-header">
             <span class="order-id">Pedido #{{order.id}}</span>
-            <span class="order-date">{{order.createdAt | date:'dd/MM/yyyy HH:mm'}}</span>
+            <span class="order-date">{{order.createdAt.toDate() | date:'dd/MM/yyyy HH:mm'}}</span>
             <span class="order-status" [ngClass]="getStatusClass(order.status)">
               {{getStatusText(order.status)}}
             </span>

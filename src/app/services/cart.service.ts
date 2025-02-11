@@ -4,8 +4,12 @@ import { map } from 'rxjs/operators';
 import { Product } from './product.service';
 
 export interface CartItem {
+  id: string;
   product: Product;
   quantity: number;
+  imageUrl: string;
+  name: string;
+  price: number;
 }
 
 @Injectable({
@@ -19,8 +23,8 @@ export class CartService {
     map(items => items.reduce((total, item) => total + item.quantity, 0))
   );
 
-  cartTotal$ = this.cart$.pipe(
-    map(items => items.reduce((total, item) => total + (item.product.price * item.quantity), 0))
+  total$ = this.cart$.pipe(
+    map(items => items.reduce((total, item) => total + (item.price * item.quantity), 0))
   );
 
   constructor() {
@@ -36,19 +40,28 @@ export class CartService {
     this.cartItems.next(items);
   }
 
-  addToCart(product: Product, quantity: number = 1) {
+  addToCart(product: Product, quantity: number) {
     const currentItems = this.cartItems.value;
-    const existingItem = currentItems.find(item => item.product.id === product.id);
+    const existingItem = currentItems.find(item => item.id === product.id);
 
     if (existingItem) {
       const updatedItems = currentItems.map(item =>
-        item.product.id === product.id
+        item.id === product.id
           ? { ...item, quantity: item.quantity + quantity }
           : item
       );
       this.saveCart(updatedItems);
     } else {
-      this.saveCart([...currentItems, { product, quantity }]);
+      if (!product.id) return; // Guard against undefined id
+      const newItem: CartItem = {
+        id: product.id,
+        product,
+        quantity,
+        imageUrl: product.imageUrl,
+        name: product.name,
+        price: product.price
+      };
+      this.saveCart([...currentItems, newItem]);
     }
   }
 
@@ -75,10 +88,11 @@ export class CartService {
     return this.cartItems.value;
   }
 
-  checkout() {
+  checkout(): { items: CartItem[], total: number } {
+    const items = this.cartItems.value;
     const transaction = {
-      items: [...this.items],
-      total: this.items.reduce((total, item) => total + (item.price * item.quantity), 0)
+      items: [...items],
+      total: items.reduce((total: number, item: CartItem) => total + (item.price * item.quantity), 0)
     };
     this.clearCart();
     return transaction;

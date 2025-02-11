@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { OrderService, Order, OrderStatus } from '../../services/order.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -43,7 +42,7 @@ export class OrdersComponent implements OnInit {
   }
 
   getStatusText(status: OrderStatus): string {
-    const statusMap = {
+    const statusMap: Record<OrderStatus, string> = {
       'canceled': 'Cancelado',
       'in_progress': 'Em Andamento',
       'delivering': 'Em Entrega',
@@ -53,7 +52,7 @@ export class OrdersComponent implements OnInit {
   }
 
   getStatusClass(status: OrderStatus): string {
-    const classMap = {
+    const classMap: Record<OrderStatus, string> = {
       'canceled': 'status-canceled',
       'in_progress': 'status-in-progress',
       'delivering': 'status-delivering',
@@ -80,5 +79,13 @@ export class OrdersComponent implements OnInit {
 
   calculateOrderTotal(order: Order): number {
     return order.items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  }
+
+  async cancelOrder(orderId: string) {
+    try {
+      await this.updateOrderStatus(orderId, 'canceled');
+    } catch (error) {
+      console.error('Erro ao cancelar pedido:', error);
+    }
   }
 }

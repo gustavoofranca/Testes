@@ -14,6 +14,7 @@ export class InventoryComponent implements OnInit {
   productForm: FormGroup;
   editingProduct: Product | null = null;
   isLoading = false;
+  selectedFile: File | null = null;
 
   constructor(
     private productService: ProductService,
@@ -32,23 +33,14 @@ export class InventoryComponent implements OnInit {
       description: ['', Validators.required],
       price: ['', [Validators.required, Validators.min(0)]],
       category: ['', Validators.required],
-      imageUrl: ['', Validators.required]
+      imageUrl: ['']
     });
   }
 
   async onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      this.isLoading = true;
-      try {
-        const productId = this.editingProduct?.id || Date.now().toString();
-        const imageUrl = await this.storageService.uploadProductImage(file, productId);
-        this.productForm.patchValue({ imageUrl });
-      } catch (error) {
-        console.error('Erro ao fazer upload da imagem:', error);
-      } finally {
-        this.isLoading = false;
-      }
+      this.selectedFile = file;
     }
   }
 
@@ -58,9 +50,17 @@ export class InventoryComponent implements OnInit {
       
       try {
         if (this.editingProduct) {
-          await this.productService.updateProduct(this.editingProduct.id!, productData);
+          await this.productService.updateProduct(
+            this.editingProduct.id!, 
+            productData, 
+            this.selectedFile || undefined
+          );
         } else {
-          await this.productService.addProduct(productData);
+          if (!this.selectedFile) {
+            alert('Por favor, selecione uma imagem para o produto');
+            return;
+          }
+          await this.productService.addProduct(productData, this.selectedFile);
         }
         
         this.resetForm();
@@ -79,12 +79,13 @@ export class InventoryComponent implements OnInit {
       category: product.category,
       imageUrl: product.imageUrl
     });
+    this.selectedFile = null;
   }
 
-  async deleteProduct(productId: string) {
+  async deleteProduct(product: Product) {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       try {
-        await this.productService.deleteProduct(productId);
+        await this.productService.deleteProduct(product.id!, product.imageUrl);
       } catch (error) {
         console.error('Erro ao deletar produto:', error);
       }
@@ -93,6 +94,7 @@ export class InventoryComponent implements OnInit {
 
   resetForm() {
     this.editingProduct = null;
+    this.selectedFile = null;
     this.productForm.reset();
   }
 }

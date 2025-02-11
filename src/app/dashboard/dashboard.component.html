@@ -32,16 +32,13 @@
   <div class="orders-section">
     <div class="section-header">
       <h3>Pedidos Recentes</h3>
-      <div class="actions">
+      <div class="filter-section">
         <select [(ngModel)]="dateFilter" (change)="updateData()">
           <option value="today">Hoje</option>
           <option value="week">Última Semana</option>
           <option value="month">Último Mês</option>
           <option value="year">Último Ano</option>
         </select>
-        <button class="export-btn" (click)="exportToSheets()">
-          Exportar para Planilha
-        </button>
       </div>
     </div>
     

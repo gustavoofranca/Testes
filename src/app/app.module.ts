@@ -1,13 +1,13 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { getStorage, provideStorage } from '@angular/fire/storage';
-import { CommonModule } from '@angular/common';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
@@ -41,7 +41,6 @@ import { AdminGuard } from './guards/admin.guard';
     NavbarComponent,
     HomeComponent,
     MenuComponent,
-    CartComponent,
     LoginComponent,
     OrdersComponent,
     InventoryComponent,
@@ -53,13 +52,14 @@ import { AdminGuard } from './guards/admin.guard';
   imports: [
     BrowserModule,
     CommonModule,
-    RouterModule.forRoot(routes),
     ReactiveFormsModule,
     FormsModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideAuth(() => getAuth()),
-    provideFirestore(() => getFirestore()),
-    provideStorage(() => getStorage())
+    RouterModule.forRoot(routes),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
+    CartComponent
   ],
   providers: [
     AuthService,
@@ -67,8 +67,10 @@ import { AdminGuard } from './guards/admin.guard';
     OrderService,
     ProductService,
     InventoryService,
-    AdminGuard
+    AdminGuard,
+    DatePipe
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

@@ -178,3 +178,33 @@
   background: #28a745;
   color: white;
 }
+
+// Media queries
+@media (max-width: 768px) {
+  .orders-container {
+    padding: 1rem;
+  }
+
+  .orders-sections {
+    grid-template-columns: 1fr;
+  }
+
+  .order-card {
+    .order-header {
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+
+    .order-footer {
+      flex-direction: column;
+      gap: 1rem;
+      text-align: center;
+
+      .order-actions {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}

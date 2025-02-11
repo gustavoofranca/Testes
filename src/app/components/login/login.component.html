@@ -9,20 +9,27 @@
           type="email" 
           id="email" 
           formControlName="email" 
+          [class.ng-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
           placeholder="Digite seu email">
-        <div class="error-message" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+        <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
           Email inválido
         </div>
       </div>
 
       <div class="form-group">
         <label for="password">Senha</label>
-        <input 
-          type="password" 
-          id="password" 
-          formControlName="password" 
-          placeholder="Digite sua senha">
-        <div class="error-message" *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+        <div class="password-input">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password" 
+            [class.ng-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            placeholder="Digite sua senha">
+          <button type="button" class="toggle-password" (click)="togglePassword()">
+            <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
           Senha deve ter no mínimo 6 caracteres
         </div>
       </div>

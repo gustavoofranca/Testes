@@ -3,22 +3,52 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #f8f9fa;
+  background: #1a1a1a;
   padding: 1rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(232, 76, 61, 0.1), rgba(0, 0, 0, 0.3));
+    z-index: 1;
+  }
 }
 
 .login-card {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #222;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 0.6s ease-out;
 
   h2 {
     text-align: center;
-    color: #333;
+    color: #fff;
     margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 3px;
+      background: #e84c3d;
+      margin: 1rem auto 0;
+      border-radius: 2px;
+    }
   }
 
   form {
@@ -33,18 +63,80 @@
 
       label {
         font-weight: 500;
-        color: #333;
+        color: #fff;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
-      input {
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+      .password-input {
+        position: relative;
+        width: 100%;
+
+        input {
+          width: 100%;
+          padding: 1rem;
+          border: 1px solid #333;
+          border-radius: 8px;
+          font-size: 1rem;
+          background: #2a2a2a;
+          color: #fff;
+          transition: all 0.3s ease;
+          padding-right: 3rem;
+
+          &:focus {
+            outline: none;
+            border-color: #e84c3d;
+            box-shadow: 0 0 0 2px rgba(232, 76, 61, 0.2);
+          }
+
+          &.ng-invalid.ng-touched {
+            border-color: #dc3545;
+          }
+        }
+
+        .toggle-password {
+          position: absolute;
+          right: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          color: #666;
+          cursor: pointer;
+          padding: 0;
+          font-size: 1.1rem;
+          transition: color 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 2rem;
+          height: 2rem;
+
+          &:hover {
+            color: #e84c3d;
+          }
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+
+      input:not([type="password"]) {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid #333;
+        border-radius: 8px;
         font-size: 1rem;
+        background: #2a2a2a;
+        color: #fff;
+        transition: all 0.3s ease;
 
         &:focus {
           outline: none;
-          border-color: #28a745;
+          border-color: #e84c3d;
+          box-shadow: 0 0 0 2px rgba(232, 76, 61, 0.2);
         }
 
         &.ng-invalid.ng-touched {
@@ -53,36 +145,52 @@
       }
 
       .error-message {
-        color: #dc3545;
+        color: #e84c3d;
         font-size: 0.875rem;
+        margin-top: 0.25rem;
       }
     }
 
-    button {
-      padding: 0.75rem;
-      background: #28a745;
+    button[type="submit"] {
+      padding: 1rem;
+      background: #e84c3d;
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       font-size: 1rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.2s;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
 
       &:hover {
-        background: #218838;
+        background: darken(#e84c3d, 10%);
+        transform: translateY(-2px);
       }
 
       &:disabled {
-        background: #6c757d;
+        background: #444;
         cursor: not-allowed;
+        transform: none;
       }
     }
 
     .error-message {
       text-align: center;
-      color: #dc3545;
+      color: #e84c3d;
       margin-top: -0.5rem;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

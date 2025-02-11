@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signOut, user } from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Observable, map } from 'rxjs';
 
 export interface UserRole {
@@ -12,17 +12,17 @@ export interface UserRole {
   providedIn: 'root'
 })
 export class AuthService {
-  user$ = user(this.auth);
+  user$ = this.auth.user;
   
   isAdmin$ = this.user$.pipe(
     map(user => user?.email === 'admin@example.com')
   );
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: AngularFireAuth) {}
 
   async login(email: string, password: string): Promise<void> {
     try {
-      await signInWithEmailAndPassword(this.auth, email, password);
+      await this.auth.signInWithEmailAndPassword(email, password);
     } catch (error) {
       console.error('Error during login:', error);
       throw error;
@@ -31,7 +31,7 @@ export class AuthService {
 
   async logout(): Promise<void> {
     try {
-      await signOut(this.auth);
+      await this.auth.signOut();
     } catch (error) {
       console.error('Error during logout:', error);
       throw error;

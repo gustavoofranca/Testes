@@ -40,24 +40,25 @@ export class CartService {
     this.cartItems.next(items);
   }
 
-  addToCart(product: Product, quantity: number) {
+  addToCart(product: Product, quantity: number = 1): void {
+    if (!product || !product.id) return;
+    
     const currentItems = this.cartItems.value;
-    const existingItem = currentItems.find(item => item.id === product.id);
-
+    const existingItem = currentItems.find(item => item.product.id === product.id);
+    
     if (existingItem) {
       const updatedItems = currentItems.map(item =>
-        item.id === product.id
+        item.product.id === product.id
           ? { ...item, quantity: item.quantity + quantity }
           : item
       );
       this.saveCart(updatedItems);
     } else {
-      if (!product.id) return; // Guard against undefined id
       const newItem: CartItem = {
         id: product.id,
         product,
         quantity,
-        imageUrl: product.imageUrl,
+        imageUrl: product.imageUrl || '',
         name: product.name,
         price: product.price
       };
@@ -65,14 +66,10 @@ export class CartService {
     }
   }
 
-  removeFromCart(productId: string) {
-    const updatedItems = this.cartItems.value.filter(item => item.product.id !== productId);
-    this.saveCart(updatedItems);
-  }
-
-  updateQuantity(productId: string, quantity: number) {
-    const updatedItems = this.cartItems.value.map(item =>
-      item.product.id === productId
+  updateQuantity(itemId: string, quantity: number) {
+    const currentItems = this.cartItems.value;
+    const updatedItems = currentItems.map(item =>
+      item.id === itemId
         ? { ...item, quantity: Math.max(0, quantity) }
         : item
     ).filter(item => item.quantity > 0);
@@ -80,21 +77,17 @@ export class CartService {
     this.saveCart(updatedItems);
   }
 
+  removeFromCart(itemId: string) {
+    const updatedItems = this.cartItems.value.filter(item => item.id !== itemId);
+    this.saveCart(updatedItems);
+  }
+
   clearCart() {
     this.saveCart([]);
   }
 
-  getCartItems(): CartItem[] {
+  // Método para acesso ao valor atual do carrinho
+  getCurrentCartItems(): CartItem[] {
     return this.cartItems.value;
-  }
-
-  checkout(): { items: CartItem[], total: number } {
-    const items = this.cartItems.value;
-    const transaction = {
-      items: [...items],
-      total: items.reduce((total: number, item: CartItem) => total + (item.price * item.quantity), 0)
-    };
-    this.clearCart();
-    return transaction;
   }
 }

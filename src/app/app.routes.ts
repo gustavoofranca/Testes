@@ -5,13 +5,15 @@ import { CartComponent } from './components/cart/cart.component';
 import { LoginComponent } from './components/login/login.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { InventoryComponent } from './components/inventory/inventory.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminGuard } from './guards/admin.guard';
 import { SaibaMaisComponent } from './saiba-mais/saiba-mais.component';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { AboutComponent } from './components/about/about.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'menu', component: MenuComponent },
   { path: 'cart', component: CartComponent },
   { path: 'saiba-mais', component: SaibaMaisComponent },
@@ -27,6 +29,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent }
     ]
   },
+  { path: 'about', component: AboutComponent },
   // Redirect old admin routes to new nested structure
   { path: 'orders', redirectTo: 'admin/orders', pathMatch: 'full' },
   { path: 'inventory', redirectTo: 'admin/inventory', pathMatch: 'full' },
